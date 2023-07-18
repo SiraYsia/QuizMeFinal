@@ -1,7 +1,6 @@
 import openai
-
-openai.api_key = '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'
-
+import os
+openai.api_key = os.environ['OPENAI_API_KEY']
 
 text = input("What text you like to generate a flashcarrd for")
 num_flashcards = input("How many flashcards do you want to generate? ")
@@ -9,7 +8,7 @@ num_flashcards = input("How many flashcards do you want to generate? ")
 
 conversation = [
     {'role': 'system', 'content': 'You are a helpful assistant.'},
-    {'role': 'user', 'content': f'create {num_flashcards} concise flashcards to demonstrate my understanding of the following text: {text}. Name the flashcards Front and Back and number them.'}
+    {'role': 'user', 'content': f'create {num_flashcards} concise flashcards to demonstrate my understanding of the following text: {text}. Name the flashcards Front and Back and number them. The front should always be the question and the back should be the answer. The front should always be in question format.'}
 ]
 
 try:
@@ -18,7 +17,7 @@ try:
         model="gpt-3.5-turbo",
         messages=conversation,
         temperature=0.7,
-        max_tokens=200
+        max_tokens=500
     )
 
     assistant_response = response.choices[0].message['content']
