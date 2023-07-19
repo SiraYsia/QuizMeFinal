@@ -124,4 +124,4 @@ def single_flashcard():
     return render_template('single-flashcard.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")
