@@ -11,8 +11,7 @@ db = SQLAlchemy(app)
 # Define the User model representing the user table
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-        # Define the columns of the user table
-
+    # Define thee columns of the user table
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
         # Establish the relationship between User and FlashcardSet models
