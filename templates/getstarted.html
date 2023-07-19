@@ -24,41 +24,33 @@
         <li><a href="{{ url_for('success') }}">Success</a></li>
         <li><a href="{{ url_for('your_flashcards') }}">Your Flashcards</a></li>
         <li><a href="{{ url_for('about_us') }}">About Us</a></li>
-        <li><a href="{{ url_for('single_flashcard') }}">Single Flashcard</a></li>
       </ul>
     </nav>
   </header>
 
   <section class="hero">
     <p class="subtitle">For more accurate flashcards that cover at least 99% of the material, please input shorter and more concise texts. You will have the option to append to your existing flashcard if you need to add more texts later.</p>
-      <!-- Add your content here -->
-    </div>
-
+  
     <div class="form-container">
-        <p class = "paste"> Paste or type your study material here </p>
-        <textarea class="study-material" placeholder="max 300 words" rows="6"></textarea>
-        <p class = "paste2" > Number of flash cards to generate </p>
+      <form method="POST" action="{{ url_for('create_flashcards') }}">
+        <p class="paste">Paste or type your study material here:</p>
+        <textarea class="study-material" name="study_material" placeholder="max 300 words" rows="6"></textarea>
+        <p class="paste2">Number of flashcards to generate:</p>
+        <textarea class="study-material" name="flashcard_count" placeholder="5" rows="6"></textarea>
 
-        <select id="flashcard-count">
-          <option value="5">5 flashcards</option>
-          <option value="10">10 flashcards</option>
-          <option value="15">15 flashcards</option>
-          <!-- Add more options as needed -->
-        </select>
-        <!-- <button id="create-flashcards-button">Create Flashcards</button> -->
-      </div>
+      
 
-      <div class="Appnd">
-        <p class="subtitle">Would you like to append your flashcards or create a new flashcard?</p>    
-        <div class="container">
-          <a href="{{ url_for('append') }}" class="get-started-button">Get Started</a>
-        </div>    
-        <div class="container">
-          <a href="{{ url_for('new_flash') }}" class="get-started-button">Get Started</a>
-        </div>     
-      </div>
+
+        <button type="submit" id="create-flashcards-button">Create Flashcards</button>
+      </form>
+    </div>
 
   </section>
 
 </body>
 </html>
+        <!-- <p class="subtitle">Would you like to append your flashcards or create a new flashcard?</p>    
+        <div class="container">
+          <a href="{{ url_for('append') }}" class="get-started-button">Append</a>
+          <a href="{{ url_for('new_flash') }}" class="get-started-button">New</a>
+        </div>      -->

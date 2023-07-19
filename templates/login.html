@@ -25,32 +25,29 @@
         <li><a href="{{ url_for('success') }}">Success</a></li>
         <li><a href="{{ url_for('your_flashcards') }}">Your Flashcards</a></li>
         <li><a href="{{ url_for('about_us') }}">About Us</a></li>
-        <li><a href="{{ url_for('single_flashcard') }}">Single Flashcard</a></li>
-
       </ul>
     </nav>
   </header>
 
   <section class="hero">
-    </div>
-
     <section class="login-page">
-        <h2 class="page-heading">Your flashcards are ready!</h2>
-        <p class="subtitle">Login to your account to access and view your generated flashcards. With just a few clicks, you can start studying and mastering your material with ease.</p>
-        
-        <div class="form-container">
-          <input type="text" id="email" placeholder="Email Address">
-          <input type="text" id="password" placeholder="Password">
-          <button id="login-button">Login</button>
-        </div>
-    
-        <p class="signup-instruction">Don't have an account yet? Sign up below:</p>
-
-        <div class="container"> 
-          <a href="{{ url_for('signup') }}" id="signup-button">Sign up</a>
-        </div>
-        
-      </section>
+      <h2 class="page-heading">Your flashcards are ready!</h2>
+      <p class="subtitle">Login to your account to access and view your generated flashcards. With just a few clicks, you can start studying and mastering your material with ease.</p>
+      
+      <div class="form-container">
+        <form action="{{ url_for('login') }}" method="POST">
+          <input type="text" name="email" id="email" placeholder="Email Address">
+          <input type="password" name="password" id="password" placeholder="Password">
+          <button type="submit" id="login-button">Login</button>
+        </form>
+      </div>
+  
+      <p class="signup-instruction">Don't have an account yet? Sign up below:</p>
+  
+      <div class="container"> 
+        <a href="{{ url_for('signup') }}" id="signup-button">Sign up</a>
+      </div>
+    </section>
   </section>
 
   <footer>

@@ -24,31 +24,23 @@
         <li><a href="{{ url_for('success') }}">Success</a></li>
         <li><a href="{{ url_for('your_flashcards') }}">Your Flashcards</a></li>
         <li><a href="{{ url_for('about_us') }}">About Us</a></li>
-        <li><a href="{{ url_for('single_flashcard') }}">Single Flashcard</a></li>
-
       </ul>
     </nav>
   </header>
 
   <section class="hero">
-    </div>
-
     <section class="signup-page">
-        <p class="subtitle">Sign up to access and view your generated flashcards. With just a few clicks, you can start studying and mastering your material with ease.</p>
-        
-        <div class="form-container">
-          <input type="text" id="email" placeholder="Email Address">
-          <input type="text" id="password" placeholder="Password">
-
-          <button id="login-button">Sign Up</button>
-
-        </div>
-    
-      </section>
+      <p class="subtitle">Sign up to access and view your generated flashcards. With just a few clicks, you can start studying and mastering your material with ease.</p>
+      
+      <div class="form-container">
+        <form action="{{ url_for('signup') }}" method="POST">
+          <input type="text" name="email" id="email" placeholder="Email Address">
+          <input type="password" name="password" id="password" placeholder="Password">
+          <button type="submit" id="signup-button">Sign Up</button>
+        </form>
+      </div>
+    </section>
   </section>
-
-  
-
 
   <footer>
     <!-- Add your footer content here -->
