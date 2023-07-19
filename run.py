@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 import bcrypt
-from app import generate_flashcards
+from apy import generate_flashcards
 from flask import session 
 
 app = Flask(__name__)
