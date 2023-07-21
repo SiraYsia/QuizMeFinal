@@ -32,9 +32,15 @@
         <textarea class="study-material" name="study_material" placeholder="max 300 words" rows="6"></textarea>
         <p class="paste2">Number of flashcards to generate:</p>
         <textarea class="study-material" name="flashcard_count" placeholder="5" rows="6"></textarea>
+        <label for="append_option">Append to Existing Set?</label>
+        <select id="append_option" name="append_option">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+        </select>
+        <p class="paste2">Name of flashcard you want to append to(if want to append):</p>
+        <textarea class="append_name" name="append_name" placeholder="Name of flashcard" rows="6"></textarea>
 
-      
-
+        
 
         <button type="submit" id="create-flashcards-button">Create Flashcards</button>
       </form>

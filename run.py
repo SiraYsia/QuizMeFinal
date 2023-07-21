@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 import bcrypt
 from apy import generate_flashcards
@@ -23,13 +23,12 @@ class User(db.Model):
 
     def __repr__(self):
         return f"User(email='{self.email}')"
-
-# Define the FlashcardSet model representing the flashcard_set table. A set of flashcards 
+# Define the FlashcardSet model representing the flashcard_set table. A set of flashcards
 class FlashcardSet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    flashcards = db.relationship('Flashcard', backref='flashcard_set', lazy=True)
+    flashcards = db.relationship('Flashcard', backref='flashcard_set', lazy=True, cascade='all, delete-orphan')  # Add cascade option
 
     def __repr__(self):
         return f"FlashcardSet(name='{self.name}')"
@@ -39,7 +38,7 @@ class Flashcard(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     front = db.Column(db.String(100), nullable=False)
     back = db.Column(db.String(100), nullable=False)
-    flashcard_set_id = db.Column(db.Integer, db.ForeignKey('flashcard_set.id'), nullable=False)
+    flashcard_set_id = db.Column(db.Integer, db.ForeignKey('flashcard_set.id', ondelete='CASCADE'), nullable=False)  # Add ondelete option
 
     def __repr__(self):
         return f"Flashcard(front='{self.front}', back='{self.back}')"
@@ -107,10 +106,36 @@ def get_started():
 def create_flashcards():
     study_material = request.form.get('study_material')
     flashcard_count = int(request.form.get('flashcard_count'))
+    append_option = request.form.get('append_option')
     flashcards = generate_flashcards(study_material, flashcard_count)
-    print(flashcards)
-    print(flashcard_count)
-    return render_template('flashcards.html', flashcards=flashcards)
+  
+
+    if append_option == 'no':
+        return render_template('flashcards.html', flashcards=flashcards)
+    
+
+    if append_option == "yes":
+        # Retrieve the authenticated user
+        user_id = session.get('user_id')
+        user = User.query.get(user_id)
+
+        # Find the flashcard set with the given name associated with the user
+        flashcard_set_name = request.form.get('append_name')
+        flashcard_set = FlashcardSet.query.filter_by(name=flashcard_set_name, user=user).first()
+
+        if flashcard_set:
+            existing_flashcards = flashcard_set.flashcards
+            all_flashcards = existing_flashcards.copy()
+
+
+        formatted_flashcards = [[flashcard.front, flashcard.back] for flashcard in all_flashcards]
+        appended_array = formatted_flashcards + flashcards
+        
+
+        return render_template('flashcards.html', flashcards=appended_array)
+    
+    return redirect('index.html')
+
 
 @app.route('/your-flashcards', methods=['GET', 'POST'])
 def your_flashcards():
@@ -166,14 +191,6 @@ def single_flashcard(flashcard_set_name):
         # Handle the case when the flashcard set is not found
         return "Flashcard set not found"
 
-# app.route('/new_flash')
-# def new_flash():
-#     return render_template('new-name.html')
-
-
-# app.route('/append')
-# def append():
-#     return render_template('append.html')
 
 @app.route('/success')
 def success():
@@ -188,6 +205,26 @@ def single_flashcard():
 def about_us():
     return render_template('aboutus.html')
 
+@app.route('/delete_flashcard_set/<flashcard_set_name>', methods=['DELETE'])
+def delete_flashcard_set(flashcard_set_name):
+    # Retrieve the authenticated user
+    user_id = session.get('user_id')
+    user = User.query.get(user_id)
+
+
+    # Find the flashcard set with the given name associated with the user
+    flashcard_set = FlashcardSet.query.filter_by(name=flashcard_set_name, user=user).first()
+    print(flashcard_set)
+    print("ASD")
+
+    if flashcard_set:
+        # Delete the flashcard_set and associated flashcards from the database
+        db.session.delete(flashcard_set)
+        db.session.commit()
+        return '', 204  # Return an empty response with status code 204 (No Content) to indicate successful deletion
+    else:
+        print('HEREHERE')
+        return 'Flashcard set not found', 404
 
 if __name__ == '__main__':
     app.run(debug=True)
