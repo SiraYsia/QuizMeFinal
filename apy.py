@@ -2,7 +2,9 @@ import openai
 import os
 import re
 
-openai.api_key = os.environ['OPENAI_API_KEY']
+url = 'https://api.openai.com/v1/chat/completions'
+openai.api_key='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'
+
 
 def generate_flashcards(study_material, flashcard_count):
     conversation = [
