@@ -24,7 +24,10 @@
   </header>
 
   <section class="hero">
-    <p class="subtitle">For more accurate flashcards that cover at least 99% of the material, please input shorter and more concise texts. You will have the option to append to your existing flashcard if you need to add more texts later.</p>
+    <p class="subtitle">For more accurate flashcards that cover at least 99% of the material, please input shorter and more concise texts. 
+      You will have the option to append to your existing flashcard if you need to add more texts later.</p>
+
+      <p> The shorter your text the more flashcards you can get out of it(has to do with max_tokens  with the API)</p>
   
     <div class="form-container">
       <form method="POST" action="{{ url_for('create_flashcards') }}">

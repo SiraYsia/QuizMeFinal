@@ -190,6 +190,41 @@ def single_flashcard(flashcard_set_name):
     else:
         # Handle the case when the flashcard set is not found
         return "Flashcard set not found"
+# Add a new route for editing a flashcard set
+@app.route('/edit_flashcard_set/<flashcard_set_name>', methods=['GET', 'POST'])
+def edit_flashcard_set(flashcard_set_name):
+    if 'user_id' not in session:
+        # User is not authenticated, redirect them to the login page or show an error message
+        return render_template('login.html', error_message="Please log in to access your flashcards.")
+
+    user_id = session['user_id']
+    user = User.query.get(user_id)
+
+    flashcard_set = FlashcardSet.query.filter_by(name=flashcard_set_name, user=user).first()
+
+    if not flashcard_set:
+        # Handle the case when the flashcard set is not found
+        return "Flashcard set not found"
+
+    if request.method == 'POST':
+        # Get the edited flashcard data from the form
+        questions = request.form.getlist('question[]')
+        answers = request.form.getlist('answer[]')
+
+        # Update the flashcards with the edited data
+        flashcards = flashcard_set.flashcards
+        for flashcard, question, answer in zip(flashcards, questions, answers):
+            flashcard.front = question
+            flashcard.back = answer
+
+        # Commit the changes to the database
+        db.session.commit()
+
+        # Redirect back to the your-flashcards page after saving changes
+        return redirect(url_for('your_flashcards'))
+
+    # Render the edit-flashcard-set.html template with the flashcards
+    return render_template('edit-flashcard-set.html', flashcard_set=flashcard_set)
 
 
 @app.route('/success')
@@ -223,8 +258,30 @@ def delete_flashcard_set(flashcard_set_name):
         db.session.commit()
         return '', 204  # Return an empty response with status code 204 (No Content) to indicate successful deletion
     else:
-        print('HEREHERE')
         return 'Flashcard set not found', 404
+    
+    
+@app.route('/search_flashcard_sets', methods=['POST'])
+def search_flashcard_sets():
+    if 'user_id' not in session:
+        # User is not authenticated, redirect them to the login page or show an error message
+        return render_template('login.html', error_message="Please log in to access your flashcards.")
+
+    # Retrieve the authenticated user
+    user_id = session['user_id']
+    user = User.query.get(user_id)
+
+    # Get the keywords/tags from the search form
+    search_keywords = request.form.get('search_keywords')
+
+    # Retrieve flashcard sets that match the search criteria
+    flashcard_sets = FlashcardSet.query.filter(FlashcardSet.name.ilike(f'%{search_keywords}%'), FlashcardSet.user == user).all()
+    if not flashcard_sets:
+        # No matching flashcard set found, render a message
+        return render_template('your-flashcards.html', flashcard_sets=None, message="No matching flashcard set was found.")
+
+    # Render the your-flashcards.html template with the filtered flashcard sets
+    return render_template('your-flashcards.html', flashcard_sets=flashcard_sets)
 
 if __name__ == '__main__':
     app.run(debug=True)
