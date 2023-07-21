@@ -284,4 +284,4 @@ def search_flashcard_sets():
     return render_template('your-flashcards.html', flashcard_sets=flashcard_sets)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")
