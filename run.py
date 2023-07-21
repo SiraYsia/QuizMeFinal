@@ -84,6 +84,14 @@ def signup():
         email = request.form.get('email')
         password = request.form.get('password')
 
+        user = User.query.filter_by(email=email).first()
+        if user:
+            # Email is not unique, show an error message
+            error_message = "Email is already in use. Please choose a different email."
+            return render_template('signup.html', error_message=error_message)
+
+
+
         # Hash the password using bcrypt
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
@@ -260,7 +268,7 @@ def delete_flashcard_set(flashcard_set_name):
     else:
         return 'Flashcard set not found', 404
     
-    
+
 @app.route('/search_flashcard_sets', methods=['POST'])
 def search_flashcard_sets():
     if 'user_id' not in session:
@@ -284,4 +292,4 @@ def search_flashcard_sets():
     return render_template('your-flashcards.html', flashcard_sets=flashcard_sets)
 
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True)

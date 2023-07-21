@@ -13,7 +13,13 @@ body{
   flex-direction: row;
   color: white;
   
-  
+
+}
+#signup_text{
+  color: rgb(245, 2, 2);
+
+
+
 }
 header {
   display: flex;
@@ -26,7 +32,7 @@ header {
 }
 
 h1{
-color: white;
+  color: white;
 }
 
 
@@ -59,7 +65,7 @@ background-color: transparent;
 .first img {
   border: 0px none;
   height: 500px;
-  width: 400px;
+  width: 500px;
   border-radius: 20px;
 }
 
@@ -113,6 +119,15 @@ align-items: center;
   color: white;
   font-size: 20px;
   margin-bottom: 40px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+}
+
+.hero .subtitle3{
+  color: rgb(255, 255, 255);
+  font-size: 20px;
+  margin-bottom: 40px;
+  margin-left:100px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 
 }
@@ -225,17 +240,10 @@ align-items: center;
   align-items: center;
 }
 
-
-img[alt="QuizMe"] {
-  font-family: 'League Spartan';
-  font-size: 45px;
-  font-weight: bold;
-
-  
-}
 .Heading {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   padding: 10px;
+  margin-left:100px;
 
   /* background-color: rgb(2, 50, 2); */
   color: white;

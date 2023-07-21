@@ -2,13 +2,11 @@ import openai
 import os
 import re
 
-url = 'https://api.openai.com/v1/chat/completions'
-openai.api_key='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'
-
+openai.api_key = os.environ['OPENAI_API_KEY']
 
 def generate_flashcards(study_material, flashcard_count):
     conversation = [
-        {'role': 'user', 'content': f'Create {flashcard_count} concise flashcards to demonstrate my understanding of the following text: {study_material}. Each flashcard should consist of a question and an answer, separated by a question mark (?). Use a new line to separate each flashcard. The format should be as follows: this is the question? this is the answer. Please avoid including any additional formatting steps, such as numbering the flashcards. DO NOT NUMBER THE FLASCHARDS OR NAME THEM QUESTION AND ANSWER SIMPLY PUT THE QUESTION THEN ANSWER PLEASE'}
+        {'role': 'user', 'content': f'Create {flashcard_count+1} concise flashcards to demonstrate my understanding of the following text: {study_material}. Each flashcard should consist of a question and an answer, separated by a question mark (?). Use a new line to separate each flashcard. The format should be as follows: this is the question? this is the answer. Please avoid including any additional formatting steps, such as numbering the flashcards. DO NOT NUMBER THE FLASCHARDS OR NAME THEM QUESTION AND ANSWER SIMPLY PUT THE QUESTION THEN ANSWER PLEASE'}
     ]
     try:
         # Make the API request to ChatGPT
@@ -36,6 +34,7 @@ def generate_flashcards(study_material, flashcard_count):
                 question = question.strip()
                 answer = answer.strip()
                 flashcards.append([question, answer])
+        print(flashcards)
         return flashcards
 
     except Exception as e:
