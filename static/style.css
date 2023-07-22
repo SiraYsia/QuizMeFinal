@@ -106,8 +106,6 @@ align-items: center;
 }
 
 
-
-
 .hero h1 {
   color: #ffffff;
   font-size: 36px;
@@ -352,6 +350,68 @@ i {
   margin:0 auto;
 }
 
+.flashcard-nav {
+  color: white;
+}
 
 
+.wrapper {
+  display: flex;
+  position: fixed;
+  width: 100%;
+  height: 92%;
+  justify-content: center;
+  align-items: center;
+}
 
+.card-design {
+  display: flex;
+  position: fixed;
+  width: 700px;
+  height: 400px;
+  transition: transform .3s ease-out;
+  box-shadow: 0 0 2px 0 #000;
+  border-radius: 8px;
+  border-color: #FAFAFA;
+
+  @media (max-width: 700px) {
+    width: 80%;
+  }
+
+  @media (max-height: 400px) {
+    height: 40%;
+  }
+}
+
+.front,
+.back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 10px;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  backface-visibility: hidden;
+  transition: transform 0.3s ease-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  color: #FAFAFA;
+}
+
+.back {
+  background-color: #333;
+  /* Change this color to suit your design */
+  transform: rotateY(180deg);
+}
+
+.card-design:hover .front {
+  transform: rotateY(180deg);
+}
+
+.card-design:hover .back {
+  transform: rotateY(0deg);
+}
