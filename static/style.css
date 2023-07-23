@@ -437,7 +437,23 @@ i {
 .card-design:hover .front {
   transform: rotateY(180deg);
 }
-
+.favorite-button {
+  position: absolute;
+  top: 10px; /* Adjust this value to control the vertical position */
+  left: 10px; /* Adjust this value to control the horizontal position */
+  background-color: #a9a9a7;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.favorite-button:hover {
+  background-color: #FFC500;
+}
 .card-design:hover .back {
   transform: rotateY(0deg);
+}
+.favorite-button.favorited {
+  background-color: yellow;
 }

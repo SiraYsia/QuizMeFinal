@@ -111,3 +111,15 @@ cardArray.forEach(card => {
   const randomColor = getRandomColor();
   card.style.backgroundColor = randomColor;
 });
+
+
+function setupFavoriteButtons() {
+  const favoriteButtons = document.querySelectorAll('.favorite-button');
+
+  favoriteButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      button.classList.toggle('favorited');
+    });
+  });
+}
+setupFavoriteButtons();
