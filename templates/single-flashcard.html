@@ -53,13 +53,13 @@
 <body>
   <header>
     <div class="logo-container">
-      <img src="logo.png" alt="QuizMe" class="logo">
+      <p id = "subtitle"> QuizMe </p>
     </div>
 
     <nav>
       <ul>
         <li><a class="flashcard-nav" href="{{ url_for('index') }}">Home</a></li>
-
+        <li><a href="{{ url_for('your_flashcards') }}"> Your Flashcards </a></li>
         <li><a class="flashcard-nav" href="{{ url_for('about_us') }}">About Us</a></li>
       </ul>
     </nav>

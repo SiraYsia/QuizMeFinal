@@ -355,6 +355,7 @@ i {
 }
 
 
+
 .wrapper {
   display: flex;
   position: fixed;
@@ -400,12 +401,16 @@ i {
   font-size: 2rem;
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   color: #FAFAFA;
+  padding: 50px; /* Add padding to create space between text and edges */
+
 }
 
 .back {
   background-color: #333;
   /* Change this color to suit your design */
   transform: rotateY(180deg);
+  padding: 50px; /* Add padding to create space between text and edges */
+
 }
 
 .card-design:hover .front {
