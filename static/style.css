@@ -6,9 +6,10 @@
 }
 
 
+
 body{
   font-family: popping;
-  background-image: linear-gradient(to bottom right, #0b0da0, #912613);
+  background-color: rgb(151, 94, 25);
   overflow-y: scroll;
   flex-direction: row;
   color: white;
@@ -52,7 +53,7 @@ nav ul li a {
 }
 
 nav ul li a.active {
-  color: pink;
+  color: rgb(240, 176, 187);
 }
 
 .first {
@@ -84,7 +85,7 @@ font-size: 40px;
 
 }
 .flashcards-text {
-color: pink;
+color: rgb(249, 207, 214);
 }
 
 .login-container {
@@ -280,7 +281,7 @@ h4{
 .why-us-text h2,
 .contact-us-text h2 {
 font-family: 'Times New Roman', Times, serif;
-color: pink;
+color: rgb(234, 150, 249);
 font-size: 28px;
 margin: 30px;
 }
