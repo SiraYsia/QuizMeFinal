@@ -8,7 +8,7 @@
 
 body{
   font-family: popping;
-  background-color: #2F303A;
+  background-image: linear-gradient(to bottom right, #0b0da0, #912613);
   overflow-y: scroll;
   flex-direction: row;
   color: white;
@@ -163,7 +163,7 @@ align-items: center;
 .form-container input[type="text"],
 .form-container select {
   margin-top:30px ;
-  background-color: #1f212e;
+  background-color: #fbfbfb;
   width: 100%;
   padding: 10px;
   border-radius: 5px;
@@ -171,9 +171,13 @@ align-items: center;
   margin-bottom: 5px;
 }
 
+#login_link{
+  color:rgb(245, 2, 2)
+}
+
 .form-container input[type="password"] {
   margin-top:30px ;
-  background-color: #1f212e;
+  background-color: #ffffff;
   width: 100%;
   padding: 10px;
   border-radius: 5px;
@@ -403,6 +407,22 @@ i {
   color: #FAFAFA;
   padding: 50px; /* Add padding to create space between text and edges */
 
+}
+
+.error-message{
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+  background-color: rgb(231, 231, 231); /* Add this line to set the background color to white */
+
+
+}
+
+#create-flashcards-button {
+  display: inline-block;
+  width: 150px; /* Set the width of the button to your preference */
+  margin-top: 20px; /* Adjust the margin as needed */
+  margin-left: 60px;
 }
 
 .back {
