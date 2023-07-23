@@ -3,20 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <title>QuizMe - Edit Flashcard Set</title>
   <link href="https://fonts.googleapis.com/css2?family=League+Spartan&display=swap" rel="stylesheet">
+  <style>
+    /* Reset some default styles */
+    body, h1, h2, table {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'League Spartan', sans-serif;
+      text-align: center;
+      background-color: rgb(213, 194, 228);
+
+    }
+
+    header {
+      background-color: #051d34;
+      color: #fff;
+      padding: 10px 0;
+    }
+
+    .logo-container {
+      font-size: 28px;
+    }
+
+    .flashcards {
+      max-width: 800px;
+      margin: 20px auto;
+      background-color: #f8ecec;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(221, 251, 52, 0.1);
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #df3939;
+    }
+    
+
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    button {
+      background-color: #071f51;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 18px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
   <header>
     <div class="logo-container">
-      <h1> QuizMe</h1>
+      <h1>QuizMe</h1>
     </div>
   </header>
 
   <section class="flashcards">
     <form method="POST" action="{{ url_for('edit_flashcard_set', flashcard_set_name=flashcard_set.name) }}">
-      <h2>Edit Flashcard Set - {{ flashcard_set.name }}</h2>
+      <h2>Editing Flashcard Set - {{ flashcard_set.name }}</h2>
       <table>
         <tr>
           <th>Question</th>
