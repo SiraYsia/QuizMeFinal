@@ -10,7 +10,7 @@
 <body>
   <header>
     <div class="logo-container">
-      <h1> QuizMe </h1>
+      <h1><b>QuizMe</b></h1>
     </div>
   
     <nav>
@@ -22,28 +22,42 @@
       </ul>
     </nav>
   </header>
-    <div class="form-container">
-      <form method="POST" action="{{ url_for('create_flashcards') }}">
-        <p class="paste2">Paste or type your study material here:</p>
-        <br><br>
-        <textarea class="study-material" name="study_material" placeholder="Please input shorter and more concise texts
-        You will have the option to append to your existing flashcard if you need to add more texts later" rows="6"></textarea>
-        <p class="paste2">Number of flashcards to generate:</p>
-        <input type="text" id="email" name="flashcard_count">
-        <p class="paste2">Append to exisiting set?</p>
-        <select id="append_option" name="append_option">
+  <div class="instructions">
+    <h4 class="subtitles">How to get started:</h4>
+    <p class="subtitles">For more accurate flashcards that cover at least 99% of the material, please input shorter and more concise texts. 
+      You will have the option to append to your existing flashcard if you need to add more texts later.</p>
+  
+      <p class="subtitles"> The shorter your text the more flashcards you can get out of it.</p>
+    </div>
+    <div class="get-started-container">
+      <div class="text-material">
+        <form method="POST" action="{{ url_for('create_flashcards') }}">
+          <p class="paste">Enter your study material here:</p>
+          <textarea class="study-material" name="study_material" placeholder="max 300 words" rows="6"></textarea>
+        </div>
+  
+        <div class="text-material2">
+          <p class="paste2">Number of flashcards to generate:</p>
+          <input class="study-material3" name="flashcard_count" placeholder="5" type="number">
+          <br>
+          <label class="append_option" for="append_option">Append to Existing Set?</label>
+          <select class="appending" id="append_option" name="append_option">
             <option value="no">No</option>
             <option value="yes">Yes</option>
-        </select>
-        <p class="paste2">If Yes, Name of flashcard you want to append to:</p>
-        <input type="text" id="email" name="append_name" placeholder="Name of flashcard">
-
-        {% if error_message %}
-        <p class="error-message">{{ error_message }}</p>
-        {% endif %}
-
-        <button type="submit" id="create-flashcards-button">Create Flashcards</button>
-      </form>
+          </select>
+          <br>
+          <br>
+          <p class="paste2">Name of flashcard you want to append to:</p>
+          <textarea class="study-material1" name="append_name" placeholder="Name of flashcard" rows="6"></textarea>
+  
+          <div>
+            {% if error_message %}
+            <p class="error-message">{{ error_message }}</p>
+            {% endif %}
+            <button type="submit" class="create-flashcard-button">Create Flashcards</button>
+          </div>
+        </form>
+      </div>
     </div>
 
   </section>
@@ -51,3 +65,9 @@
 </body>
 </html>
       
+
+
+
+
+
+ 
