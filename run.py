@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 import bcrypt
 from apy import generate_flashcards
@@ -23,13 +23,12 @@ class User(db.Model):
 
     def __repr__(self):
         return f"User(email='{self.email}')"
-
-# Define the FlashcardSet model representing the flashcard_set table. A set of flashcards 
+# Define the FlashcardSet model representing the flashcard_set table. A set of flashcards
 class FlashcardSet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    flashcards = db.relationship('Flashcard', backref='flashcard_set', lazy=True)
+    flashcards = db.relationship('Flashcard', backref='flashcard_set', lazy=True, cascade='all, delete-orphan')  # Add cascade option
 
     def __repr__(self):
         return f"FlashcardSet(name='{self.name}')"
@@ -39,7 +38,7 @@ class Flashcard(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     front = db.Column(db.String(100), nullable=False)
     back = db.Column(db.String(100), nullable=False)
-    flashcard_set_id = db.Column(db.Integer, db.ForeignKey('flashcard_set.id'), nullable=False)
+    flashcard_set_id = db.Column(db.Integer, db.ForeignKey('flashcard_set.id', ondelete='CASCADE'), nullable=False)  # Add ondelete option
 
     def __repr__(self):
         return f"Flashcard(front='{self.front}', back='{self.back}')"
@@ -85,6 +84,14 @@ def signup():
         email = request.form.get('email')
         password = request.form.get('password')
 
+        user = User.query.filter_by(email=email).first()
+        if user:
+            # Email is not unique, show an error message
+            error_message = "Email is already in use. Please choose a different email."
+            return render_template('signup.html', error_message=error_message)
+
+
+
         # Hash the password using bcrypt
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
@@ -99,18 +106,64 @@ def signup():
     # GET request, render the sign-up form
     return render_template('signup.html')
 
-@app.route('/getstarted') 
+@app.route('/create-flashcards') 
 def get_started():
     return render_template('getstarted.html')
 
 @app.route('/createflashcards', methods=['GET', 'POST'])
 def create_flashcards():
     study_material = request.form.get('study_material')
-    flashcard_count = int(request.form.get('flashcard_count'))
+    flashcard_count = request.form.get('flashcard_count')
+
+    # Error handling for missing study material or flashcard count
+    if not study_material and not flashcard_count:
+        error_message = "Study material and flashcard count are required fields."
+        return render_template('getstarted.html', error_message=error_message)
+    if not study_material or not flashcard_count:
+        error_message = "Study material and flashcard count are required fields."
+        return render_template('getstarted.html', error_message=error_message)    
+
+    try:
+        flashcard_count = int(flashcard_count)
+        if flashcard_count <= 0:
+            raise ValueError()
+    except ValueError:
+        error_message = "Invalid flashcard count. Please provide a positive integer."
+        return render_template('getstarted.html', flashcards=[], error_message=error_message)
+
+    append_option = request.form.get('append_option')
     flashcards = generate_flashcards(study_material, flashcard_count)
-    print(flashcards)
-    print(flashcard_count)
-    return render_template('flashcards.html', flashcards=flashcards)
+
+    if append_option == 'no':
+        return render_template('flashcards.html', flashcards=flashcards)
+
+    if append_option == "yes":
+        # Retrieve the authenticated user
+        user_id = session.get('user_id')
+        user = User.query.get(user_id)
+
+        # Find the flashcard set with the given name associated with the user
+        flashcard_set_name = request.form.get('append_name')
+        if not flashcard_set_name:
+            error_message = "Specfiy the name of flashcard set you want to append to"
+            return render_template('getstarted.html', error_message=error_message)
+
+        
+        
+        flashcard_set = FlashcardSet.query.filter_by(name=flashcard_set_name, user=user).first()
+
+        if not flashcard_set:
+            error_message = f"Flashcard set '{flashcard_set_name}' does not exist. Please provide a valid set name."
+            return render_template('getstarted.html', flashcards=[], error_message=error_message)
+
+        existing_flashcards = flashcard_set.flashcards
+        formatted_flashcards = [[flashcard.front, flashcard.back] for flashcard in existing_flashcards]
+        appended_array = formatted_flashcards + flashcards
+
+        return render_template('flashcards.html', flashcards=appended_array)
+
+    return redirect('index.html')
+
 
 @app.route('/your-flashcards', methods=['GET', 'POST'])
 def your_flashcards():
@@ -160,20 +213,48 @@ def single_flashcard(flashcard_set_name):
         # Retrieve the flashcards associated with the flashcard set
         flashcards = flashcard_set.flashcards
         
+        
         # Render the single-flashcard.html template with the flashcards
         return render_template('single-flashcard.html', flashcards=flashcards, flashcard_set_name=flashcard_set_name)
     else:
         # Handle the case when the flashcard set is not found
         return "Flashcard set not found"
+# Add a new route for editing a flashcard set
+@app.route('/edit_flashcard_set/<flashcard_set_name>', methods=['GET', 'POST'])
+def edit_flashcard_set(flashcard_set_name):
+    if 'user_id' not in session:
+        # User is not authenticated, redirect them to the login page or show an error message
+        return render_template('login.html', error_message="Please log in to access your flashcards.")
 
-# app.route('/new_flash')
-# def new_flash():
-#     return render_template('new-name.html')
+    user_id = session['user_id']
+    user = User.query.get(user_id)
 
+    flashcard_set = FlashcardSet.query.filter_by(name=flashcard_set_name, user=user).first()
 
-# app.route('/append')
-# def append():
-#     return render_template('append.html')
+    if not flashcard_set:
+        # Handle the case when the flashcard set is not found
+        return "Flashcard set not found"
+
+    if request.method == 'POST':
+        # Get the edited flashcard data from the form
+        questions = request.form.getlist('question[]')
+        answers = request.form.getlist('answer[]')
+
+        # Update the flashcards with the edited data
+        flashcards = flashcard_set.flashcards
+        for flashcard, question, answer in zip(flashcards, questions, answers):
+            flashcard.front = question
+            flashcard.back = answer
+
+        # Commit the changes to the database
+        db.session.commit()
+
+        # Redirect back to the your-flashcards page after saving changes
+        return redirect(url_for('your_flashcards'))
+
+    # Render the edit-flashcard-set.html template with the flashcards
+    return render_template('edit-flashcard-set.html', flashcard_set=flashcard_set)
+
 
 @app.route('/success')
 def success():
@@ -188,6 +269,48 @@ def single_flashcard():
 def about_us():
     return render_template('aboutus.html')
 
+@app.route('/delete_flashcard_set/<flashcard_set_name>', methods=['DELETE'])
+def delete_flashcard_set(flashcard_set_name):
+    # Retrieve the authenticated user
+    user_id = session.get('user_id')
+    user = User.query.get(user_id)
+
+
+    # Find the flashcard set with the given name associated with the user
+    flashcard_set = FlashcardSet.query.filter_by(name=flashcard_set_name, user=user).first()
+    print(flashcard_set)
+    print("ASD")
+
+    if flashcard_set:
+        # Delete the flashcard_set and associated flashcards from the database
+        db.session.delete(flashcard_set)
+        db.session.commit()
+        return '', 204  # Return an empty response with status code 204 (No Content) to indicate successful deletion
+    else:
+        return 'Flashcard set not found', 404
+    
+
+@app.route('/search_flashcard_sets', methods=['POST'])
+def search_flashcard_sets():
+    if 'user_id' not in session:
+        # User is not authenticated, redirect them to the login page or show an error message
+        return render_template('login.html', error_message="Please log in to access your flashcards.")
+
+    # Retrieve the authenticated user
+    user_id = session['user_id']
+    user = User.query.get(user_id)
+
+    # Get the keywords/tags from the search form
+    search_keywords = request.form.get('search_keywords')
+
+    # Retrieve flashcard sets that match the search criteria
+    flashcard_sets = FlashcardSet.query.filter(FlashcardSet.name.ilike(f'%{search_keywords}%'), FlashcardSet.user == user).all()
+    if not flashcard_sets:
+        # No matching flashcard set found, render a message
+        return render_template('your-flashcards.html', flashcard_sets=None, message="No matching flashcard set was found.")
+
+    # Render the your-flashcards.html template with the filtered flashcard sets
+    return render_template('your-flashcards.html', flashcard_sets=flashcard_sets)
 
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True)
